@@ -1,25 +1,18 @@
-import QrCode from 'qrcode-reader';
+// let qrString = '1,Bananna,Fruit,/images/1.png,3.99,each';
+// let groceryItem = qrCodeStringToObject(qrString)
+//  {
+//    id: 1,
+//    name: 'Bananna',
+//    category: 'Fruit',
+//    imageUrl: '/images/1.png'
+//    price: 3.99
+//    unit: 'each
+//  }
 
-/**
- * Convert QRcode data into a grocery item
- * 
- * @example
- * 
- *    let qrString = '1,Bananna,Fruit,/images/1.png,3.99,each';
- *    let groceryItem = qrCodeStringToObject(qrString)
- *    {
- *      id: 1,
- *      name: 'Bananna',
- *      category: 'Fruit',
- *      imageUrl: '/images/1.png'
- *      price: 3.99
- *      unit: 'each
- *    }
- * 
- * @public
- * @param {String} qrDataString QR code data
- * @return {Object} grocery item corresponding to QR code data
- */
+// @public
+// @param {String} qrDataString QR code data
+// @return {Object} grocery item corresponding to QR code data
+ 
 export function qrCodeStringToObject(qrDataString) {
   let [id, name, category, imageUrl, price, unit] = qrDataString.split(',');
   return {
@@ -79,20 +72,11 @@ export function fileToImageBuffer(file) {
  */
 export function onQrCodeScan(imageBuffer, cartStore) {
   return new Promise((resolve/*, reject*/) => {
-
-    // BEGIN MAIN THREAD SOLUTION
-    let qr = new QrCode();
-    qr.callback = function(error, rawResult) {
-      if(error) {
-        self.postMessage({ error });
-        return;
-      }
-      let result = qrCodeStringToObject(rawResult.result);
-      resolve(result);
+    let worker = new Worker('../qr-worker.js');
+    worker.postMessage(imageBuffer);
+    worker.onmessage = e => {
+      resolve(e.data);
     }
-    qr.decode(imageBuffer);
-    // END MAIN THREAD SOLUTION
-    
   }).then((qrData) => {
     cartStore.addItemToCart(qrData);
   });
