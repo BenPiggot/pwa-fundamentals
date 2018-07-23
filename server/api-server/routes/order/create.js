@@ -21,7 +21,7 @@ module.exports = function (api) {
   const GroceryItem = api.db.models['grocery-item'];
 
   return function (req, res) {
-    
+    console.log(req.body)
     let items = req.body.data;
     api.db.transaction(() => {
       return GroceryItem.findAll({where: {

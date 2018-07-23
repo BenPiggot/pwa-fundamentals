@@ -8,13 +8,6 @@ import { endpoint as API_ENDPOINT } from '../utils/api';
  * @public
  */
 export default class CartStore {
-  /**
-   * Instantiate a new CartStore
-   * There's usually only one of these per app
-   * 
-   * @public
-   * @return {CartStore}
-   */
   constructor() {
     this._items = []; // Items currently in the cart
     /**
@@ -67,22 +60,47 @@ export default class CartStore {
    * For now this will only cause the UI to update, but we'll enhance it later
    * 
    * @private
-   * @return {Promise} the new cart
    */
   _saveCart() {
     this._onItemsUpdated();
-    return Promise.resolve(this.items);
+    return fetch(`${API_ENDPOINT}api/cart/items`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8'
+        },
+        body: JSON.stringify({data: this.items})
+      })
+      .then(response => {
+        return response.json()
+      })
+      .then(response => {
+        response.data;
+      })
   }
+
 
   /**
    * "Check out" of the grocery store, turning the contents of the shopping cart
    * into an "order"
    * 
    * @public
-   * @return {Promise} 
    */
   doCheckout() {
-    throw 'CartStore#doCheckout Not yet implemented'
+    console.log(this.items)
+    return fetch(`${API_ENDPOINT}api/order`,
+      {
+        method: 'POST', 
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8'
+        },
+        body: JSON.stringify({data: this.items})
+      })
+      .then(this._restoreCart)
+      .then(newItems => {
+        this._items = newItems
+        this._onItemsUpdated();
+      })
   }
 
   /**

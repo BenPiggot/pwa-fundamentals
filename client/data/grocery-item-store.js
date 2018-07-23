@@ -12,7 +12,6 @@ export default class GroceryItemStore {
    * Create a new instance
    * There's usually only one of these per app
    * @public
-   * @return {GroceryItemStore}
    */
   constructor() {
     // restore items to get their initial state

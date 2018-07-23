@@ -1,18 +1,3 @@
-// let qrString = '1,Bananna,Fruit,/images/1.png,3.99,each';
-// let groceryItem = qrCodeStringToObject(qrString)
-//  {
-//    id: 1,
-//    name: 'Bananna',
-//    category: 'Fruit',
-//    imageUrl: '/images/1.png'
-//    price: 3.99
-//    unit: 'each
-//  }
-
-// @public
-// @param {String} qrDataString QR code data
-// @return {Object} grocery item corresponding to QR code data
- 
 export function qrCodeStringToObject(qrDataString) {
   let [id, name, category, imageUrl, price, unit] = qrDataString.split(',');
   return {
