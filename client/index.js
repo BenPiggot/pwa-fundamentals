@@ -24,7 +24,6 @@ import 'worker-loader?name=./service-worker.js!./service-worker.js';
 ReactDOM.render((<App />), document.getElementById('root'));
 
 if ('serviceWorker' in navigator) {
-  console.log('Browser supports service worker');
   navigator.serviceWorker.register('service-worker.js')
     .then(registration => {
       console.log('Registered!', registration);
